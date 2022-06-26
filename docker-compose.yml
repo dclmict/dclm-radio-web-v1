@@ -1,0 +1,27 @@
+# Services
+services:
+
+  # DDC Service
+  dclm-radio-app:
+    container_name: dclm-radio-app
+    build: ./.docker
+    image: nginx-php-fpm
+    environment:
+      GIT_REPO: ${GIT_REPO}
+      GIT_EMAIL: ${GIT_EMAIL}
+      GIT_NAME: ${GIT_NAME}
+      GIT_BRANCH: ${GIT_BRANCH}
+      GIT_PERSONAL_TOKEN: ${GIT_PERSONAL_TOKEN}
+      WEBROOT: ${WEBROOT}
+    ports:
+      - 1003:80
+    networks:
+      - dclm_radio
+    # volumes:
+    #   - ./.docker/nginx/testify.conf:/etc/nginx/sites-available/default.conf
+      #- ./.env:/var/www/html
+    restart: always
+
+networks:
+  dclmradio:
+    name: dclm_radio
