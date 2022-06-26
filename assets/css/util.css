@@ -1,0 +1,59 @@
+
+.sam-centered {
+    text-align:center
+}
+
+#title00 {
+    white-space:nowrap;
+    max-width:17em;
+    overflow:hidden;
+}
+
+#title9 {
+position: relative;
+white-space:nowrap;
+max-width:17em;
+overflow:hidden;
+top: 0;
+left: 0;
+display:inline-block; 
+white-space: nowrap;
+animation-name: marquee;
+animation-duration: 5s;
+animation-iteration-count: infinite;
+}
+@keyframes bounce {
+    0% {  transform: translateX(10%)    }
+    50%   {  transform: translateX(-100%) }
+    100% {  transform: translateX(10%)    }
+}
+
+
+.marquee {
+    height: 25px;
+    width: 620px;
+  
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .marquee div {
+    display: block;
+    width: 200%;
+    height: 30px;
+  
+    position: absolute;
+    overflow: hidden;
+  
+    animation: marquee 10s linear infinite;
+  }
+  
+  .marquee span {
+    float: left;
+    width: 50%;
+  }
+  
+  @keyframes marquee {
+    0% { left: 0; }
+    100% { left: -100%; }
+  }
