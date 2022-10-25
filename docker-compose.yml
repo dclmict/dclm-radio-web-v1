@@ -16,12 +16,13 @@ services:
     ports:
       - 1003:80
     networks:
-      - dclm_radio
+      - bams
     # volumes:
     #   - ./.docker/nginx/testify.conf:/etc/nginx/sites-available/default.conf
       #- ./.env:/var/www/html
     restart: always
 
 networks:
-  dclmradio:
-    name: dclm_radio
+  bams:
+    name: bams-dev
+    external: true 

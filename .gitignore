@@ -2,6 +2,7 @@
 **/.DS_Store
 get.php
 .setup.txt
+.env
 
 # folders
 _

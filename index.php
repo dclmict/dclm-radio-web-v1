@@ -16,7 +16,7 @@ header("Pragma: no-cache");
 
   <body>
    
-    <?php include 'assets/libs/modal.php';?>
+    <//?php include 'assets/libs/modal.php';?>
 
     <div class="grid-x">
       <div class="large-6 medium-6 small-12 large-centered medium-centered cell">
