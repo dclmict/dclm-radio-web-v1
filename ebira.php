@@ -106,12 +106,12 @@ header("Pragma: no-cache");
     </div>
     
     <?php include 'assets/libs/footer.php'; ?>
-    <script>
+    <!-- <script>
       $(document).foundation();
       $(document).ready(function(){
           $('#myModal').foundation('reveal', 'open')
       });
-    </script>     
+    </script> -->
   </body>
   <script type="text/javascript">
     Amplitude.init({

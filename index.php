@@ -109,7 +109,7 @@ header("Pragma: no-cache");
     </div>
 
     <?php include 'assets/libs/footer.php'; ?>
-    <script>
+    <!-- <script>
       //ref: https://get.foundation/sites/docs/reveal.html
       //ref: https://get.foundation/sites/docs/javascript.html#programmatic-use
       $(document).foundation();
@@ -117,7 +117,7 @@ header("Pragma: no-cache");
           var $modal = new Foundation.Reveal($('#myModal'));
           $modal.open();
       });
-    </script>
+    </script> -->
   </body>
   <!-- Media player code -->
   <script type="text/javascript">
