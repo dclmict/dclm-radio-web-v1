@@ -11,7 +11,7 @@ header("Pragma: no-cache");
 <html>
   <head>
     <title>Spanish :: DCLM Radio</title>
-		<//?php include 'assets/libs/meta.php'; ?>
+		<?php include 'assets/libs/meta.php'; ?>
   </head>
 
 
