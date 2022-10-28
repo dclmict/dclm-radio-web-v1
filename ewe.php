@@ -118,7 +118,7 @@ header("Pragma: no-cache");
         {
           "name": "On Air!",
           "artist": "DCLM Radio - Ewe",
-          "url": "https://airtime.dclm.org/radio/8123/ewe",
+          "url": "https://airtime.dclm.org/radio/8140/ewe",
           "cover_art_url": "assets/img/album-art/art.png",
           "genre": "Gospel",
       	  "live": true

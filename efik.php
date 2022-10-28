@@ -118,7 +118,7 @@ header("Pragma: no-cache");
         {
           "name": "On Air!",
           "artist": "DCLM Radio - Efik",
-          "url": "https://airtime.dclm.org/radio/8122/efik",
+          "url": "https://airtime.dclm.org/radio/8145/efik",
           "cover_art_url": "assets/img/album-art/art.png",
           "genre": "Gospel",
       	  "live": true

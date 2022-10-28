@@ -119,7 +119,7 @@ header("Pragma: no-cache");
         {
           "name": "On Air!",
           "artist": "DCLM Radio - Ebira",
-          "url": "https://airtime.dclm.org/radio/8121/ebira",
+          "url": "https://airtime.dclm.org/radio/8125/ebira",
           "cover_art_url": "assets/img/album-art/art.png",
           "genre": "Gospel",
       	  "live": true

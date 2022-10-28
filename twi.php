@@ -118,7 +118,7 @@ header("Pragma: no-cache");
         {
           "name": "On Air!",
           "artist": "DCLM Radio - Twi",
-          "url": "https://airtime.dclm.org/radio/8124/twi",
+          "url": "https://airtime.dclm.org/radio/8135/twi",
           "cover_art_url": "assets/img/album-art/art.png",
           "genre": "Gospel",
       	  "live": true
