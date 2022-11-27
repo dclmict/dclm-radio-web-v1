@@ -20,12 +20,12 @@
 
               <a href="/" class="hollow button">English/Anglais</a>
               <a href="french" class="hollow button">French/Français</a>
-              <a href="spanish" class="hollow button">Spanish/Espagnol</a>
+              <a href="spanish" class="hollow button">Spanish/Español</a>
               <a href="portuguese" class="hollow button">Portuguese/Portugais</a>
+              <a href="egun" class="hollow button">Gungbe/Egun</a>
               <a href="yoruba" class="hollow button">Yoruba</a>
               <a href="hausa" class="hollow button">Hausa</a>
               <a href="igbo" class="hollow button">Igbo</a>
-              <a href="egun" class="hollow button">Gungbe/Egun</a>
               <a href="ebira" class="hollow button">Ebira</a>
               <a href="efik" class="hollow button">Efik</a>
               <a href="ewe" class="hollow button">Ewe</a>
