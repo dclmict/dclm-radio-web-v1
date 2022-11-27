@@ -10,7 +10,7 @@ header("Pragma: no-cache");
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Egun :: DCLM Radio</title>
+    <title>Gungbe/Egun :: DCLM Radio</title>
 		<?php include 'assets/libs/meta.php'; ?>
   </head>
 
@@ -26,7 +26,7 @@ header("Pragma: no-cache");
 
               </div>
               <div class="large-12 large-centered medium-6 small-6 cell">
-                <span class="now-playing">DCLM Radio - Egun</span>
+                <span class="now-playing">DCLM Radio - Gungbe/Egun</span>
               </div>
               <div class="large-3 medium-3 small-3 cell">
                 <!--<img src="./img/show-playlist.svg" class="show-playlist"/>-->
