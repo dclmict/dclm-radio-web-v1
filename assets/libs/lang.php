@@ -29,4 +29,8 @@
               <a href="ebira" class="hollow button">Ebira</a>
               <a href="efik" class="hollow button">Efik</a>
               <a href="ewe" class="hollow button">Ewe</a>
-              <a href="twi" class="hollow button">Twi</a>
+	      <a href="twi" class="hollow button">Twi</a>
+	      <a href="urhobo" class="hollow button">Urhobo</a>
+              <a href="idoma" class="hollow button">Idoma</a>
+              <a href="igede" class="hollow button">Igede</a>
+              <a href="tiv" class="hollow button">Tiv</a>
