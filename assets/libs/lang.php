@@ -35,3 +35,4 @@
               <a href="igede" class="hollow button">Igede</a>
               <a href="tiv" class="hollow button">Tiv</a>
               <a href="gbagyi" class="hollow button">Gbagyi</a>
+              <a href="igala" class="hollow button">Igala</a>
