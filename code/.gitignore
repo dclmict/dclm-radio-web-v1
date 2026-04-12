@@ -1,0 +1,61 @@
+# PHP
+
+# files
+.env
+.env.backup
+.phpunit.result.cache
+*.sql
+*.log
+*.zip
+*.rar
+*.gz
+*.tar
+*.7z
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+*.odt
+*.txt
+.DS_Store
+Thumbs.db
+desktop.ini
+**/.DS_Store*
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+docker-compose*
+composer.lock
+pnpm-lock.yaml
+
+# folders
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+/.idea
+/.vscode
+bower_components/
+
+# Ignore PHPStorm specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ignore Laravel specific files
+bootstrap/cache/
+storage/logs/
+storage/framework/views/
+
+# Ignore Composer specific files
+composer.phar
+
+# Ignore Node specific files
+package-lock.json
+
+# Ignore Mac specific files
+*.Spotlight-V100
+*.Trashes

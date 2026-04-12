@@ -1,0 +1,209 @@
+name: Build & Deploy App
+on:
+  push:
+    branches:
+      - v1
+      - release/dev
+      - release/dev-v2
+      - release/prev
+      - release/prev-v2
+      - release/prod
+      - release/prod-v2
+      - 'release/dev-*'
+      - 'release/prev-*'
+      - 'release/prod-*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Fetch all history for version tracking
+          submodules: 'recursive'
+
+      - name: Determine environment from branch
+        id: env-setup
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          case "$BRANCH" in
+            "release/dev")
+              echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/dev.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/dev/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            "release/dev-v2")
+              echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/dev-v2.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/dev/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            release/dev-*)
+              echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/${BRANCH#release/}.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/dev/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            "release/prev")
+              echo "ENVIRONMENT=prev" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/prev.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/prev/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            "release/prev-v2")
+              echo "ENVIRONMENT=prev" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/prev-v2.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/prev/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            release/prev-*)
+              echo "ENVIRONMENT=prev" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/${BRANCH#release/}.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/prev/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            "release/prod")
+              echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/prod.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/prod/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            "release/prod-v2")
+              echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/prod-v2.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/prod/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            release/prod-*)
+              echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/${BRANCH#release/}.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/prod/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            "v1")
+              echo "ENVIRONMENT=v1" >> $GITHUB_ENV
+              echo "ENV_FILE=./ops/v1.env" >> $GITHUB_ENV
+              echo "VAULT_MOUNT_PATH=kv" >> $GITHUB_ENV
+              echo "VAULT_SECRET_BASE_PATH=dclm/v1/dclm-radio-app-v1" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "Unsupported branch: ${{ github.ref_name }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Import Kubeconfig from Vault
+        id: import-secrets
+        uses: hashicorp/vault-action@v3.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/data/dclm/k8s kubeconfig
+
+      # Import env file from Vault (needed for manifest generation, version bumping, Docker build)
+      # App secrets are injected into pods by ESO at runtime — this is for CI config vars only.
+      - name: Import application config from Vault
+        env:
+          VAULT_ADDR: ${{ secrets.VAULT_URL }}
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          VAULT_SECRET_BASE_PATH: ${{ env.VAULT_SECRET_BASE_PATH }}
+          ENV_FILE: ${{ env.ENV_FILE }}
+          VAULT_MOUNT_PATH: ${{ env.VAULT_MOUNT_PATH }}
+        run: |
+          chmod +x ./ops/sh/import-secrets.sh
+          ./ops/sh/import-secrets.sh "$ENV_FILE"
+
+      - name: Setup Kubernetes Configuration
+        run: |
+          echo "🔧 Setting up Kubernetes configuration..."
+          # Create .kube directory and write config
+          mkdir -p "$HOME/.kube"
+          echo "${{ steps.import-secrets.outputs.kubeconfig }}" | base64 --decode > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+          # Export kubeconfig environment var
+          export KUBECONFIG="$HOME/.kube/config"
+
+          # Show contexts and test connection
+          # kubectl config get-contexts -o name
+          # kubectl get pods
+
+          # Verify kubectl access
+          echo "🔍 Verifying kubectl access..."
+          kubectl version --client
+          kubectl cluster-info --request-timeout=10s || echo "⚠️ Cluster connection will be tested during deployment"
+          echo "✅ Kubernetes configuration ready"
+
+      - name: Bump App Version
+        id: version
+        env:
+          VAULT_ADDR: ${{ secrets.VAULT_URL }}
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          VAULT_MOUNT_PATH: ${{ env.VAULT_MOUNT_PATH }}
+          VAULT_SECRET_KEY: ${{ env.VAULT_SECRET_BASE_PATH }}
+        run: |
+          NEW_VERSION=$(make auto-version BRANCH=${{ github.ref_name }} | tail -1)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "Generated version: $NEW_VERSION"
+          cat $GITHUB_ENV
+
+          # Update environment file with new version
+          echo "🔄 Updating environment file with new version..."
+          make update-version ENV_FILE="$ENV_FILE" VERSION="$NEW_VERSION"
+          echo "✅ Updated $ENV_FILE with version $NEW_VERSION"
+
+      - name: Deploy App to Kubernetes (Full Deploy)
+        env:
+          GITHUB_RUN: ${{ github.run_number }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          DOCKER_BUILDKIT: 1
+          BUILDKIT_PROGRESS: plain
+        run: |
+          echo "🚀 Starting K8s Full Deploy for $ENVIRONMENT environment"
+
+          # update src/.env or code/.env file
+          echo "Running Makefile"
+          make
+
+          echo "Make kubeconfig available to kubectl"
+          export KUBECONFIG="$HOME/.kube/config"
+
+          # Force no-cache Docker build for production deployments
+          echo "🔄 Forcing Docker build without cache to ensure latest code is deployed"
+          export FORCE_NO_CACHE=true
+
+          # Run the full deploy function
+          chmod +x ./ops/sh/app.sh
+          ./ops/sh/app.sh 30
+
+      - name: Send deployment notification
+        if: always()
+        run: |
+          # Determine status
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS="✅ SUCCESS"
+            COLOR="good"
+          else
+            STATUS="❌ FAILED"
+            COLOR="danger"
+          fi
+          
+          echo "📧 Deployment $STATUS for $ENVIRONMENT environment"
+          echo "🏷️ Version: $NEW_VERSION"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          
+          # Add your notification logic here (email, Telegram, Slack, etc.)
+          # For now, just output the status
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "🔄 Starting rollback process using Helm..."
+          # Add rollback logic using helm history
+          # helm rollback <release-name> <revision> --namespace <namespace>
+          echo "💡 Manual rollback may be required using: helm history <release-name>"
