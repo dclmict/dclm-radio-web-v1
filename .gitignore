@@ -1,8 +1,23 @@
-# waran waran
-**/.DS_Store
-get.php
-.setup.txt
-.env
+# app
+
+# https://git-scm.com/docs/gitignore
+# files
+dclm-*
+dles-*
+dmt-*
+dtc-*
+gck-*
+bld-*
+.cache*
+.claude*
+**/*.env*
+**/.DS_Store*
+ops/k8s/app.yml
+ops/k8s/ing.yml
+ops/k8s/hpa.yml
+ops/k8s/minion.yml
+ops/k8s/secret.yml
+ops/k8s/external-secret.yml
 
 # folders
 _

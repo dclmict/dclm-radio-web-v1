@@ -1,0 +1,17 @@
+{
+	frankenphp
+	order php_server before file_server
+	order php before file_server
+}
+
+{$SERVER_NAME:localhost} {
+	root * /app/public
+
+	encode zstd br gzip
+
+	log
+
+	php_server {
+		try_files {path} {path}.php {path}/index.php index.php
+	}
+}

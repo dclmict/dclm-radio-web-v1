@@ -1,0 +1,15 @@
+services:
+  dclm-radio-app-v1:
+    container_name: dclm-radio-app-v1
+    image: img.dclmict.org/dclm/frankenphp:8.3
+    environment:
+      - SERVER_NAME=:3000
+    working_dir: /app
+    volumes:
+      - ./:/app/public
+      - ../ops/php/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../ops/php/php-errors.ini:/usr/local/etc/php/conf.d/errors.ini:ro
+    env_file: .env
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
