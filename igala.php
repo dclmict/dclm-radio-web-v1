@@ -118,7 +118,7 @@ header("Pragma: no-cache");
         {
           "name": "On Air!",
           "artist": "DCLM Radio - Igala",
-          "url": "https://airtime.dclm.org/radio/8230/igala",
+          "url": "https://airtime.dclm.org/radio/8040/igala",
           "cover_art_url": "assets/img/album-art/art.png",
           "genre": "Gospel",
       	  "live": true
