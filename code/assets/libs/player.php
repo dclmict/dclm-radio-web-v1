@@ -1,21 +1,12 @@
-<?php 
-header("Content-Type: text/html");
-header("Expires: 0");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-?>
-
 <!DOCTYPE html>
-<html>
+<html class="no-js" lang="en">
   <head>
-    <title>Spanish/Español :: DCLM Radio</title>
+    <title><?= htmlspecialchars($lang['title']) ?></title>
 		<?php include 'assets/libs/meta.php'; ?>
   </head>
 
-
   <body>
+
     <div class="grid-x">
       <div class="large-6 medium-6 small-12 large-centered medium-centered cell">
 
@@ -26,7 +17,7 @@ header("Pragma: no-cache");
 
               </div>
               <div class="large-12 large-centered medium-6 small-6 cell">
-                <span class="now-playing">DCLM Radio - Spanish/Español</span>
+                <span class="now-playing"><?= htmlspecialchars($lang['display_name']) ?></span>
               </div>
               <div class="large-3 medium-3 small-3 cell">
                 <!--<img src="./img/show-playlist.svg" class="show-playlist"/>-->
@@ -39,13 +30,13 @@ header("Pragma: no-cache");
 
             <div class="song-meta-data ">
               <div class="grid-x align-center" >
-                <span amplitude-song-info="name" amplitude-main-song-info="true" class="song-name" id="title"></span> 
+                <span amplitude-song-info="name" amplitude-main-song-info="true" class="song-name" id="title"></span>
               </div>
               <div class="grid-x align-center ">
               <span amplitude-song-info="artist" amplitude-main-song-info="true" class="song-artist" id="artist"></span>
               </div>
               <div class="grid-x align-center ">
-                <span>Listeners:&nbsp;</span> 
+                <span>Listeners:&nbsp;</span>
                 <span class="song-artist" id="listeners"> </span>
               </div>
             </div>
@@ -85,6 +76,7 @@ header("Pragma: no-cache");
                 <div class="amplitude-play-pause" amplitude-main-play-pause="true" id="play-pause"></div>
                 <!--<div class="amplitude-next" id="next"></div>-->
               </div>
+
             </div>
           </div>
 
@@ -104,21 +96,16 @@ header("Pragma: no-cache");
 
       </div>
     </div>
+
     <?php include 'assets/libs/footer.php'; ?>
-    <!-- <script>
-      $(document).foundation();
-      $(document).ready(function(){
-          $('#myModal').foundation('reveal', 'open')
-      });
-    </script> -->
   </body>
   <script type="text/javascript">
     Amplitude.init({
       "songs": [
         {
           "name": "On Air!",
-          "artist": "DCLM Radio - Spanish",
-          "url": "https://airtime.dclm.org/radio/8100/spanish",
+          "artist": <?= json_encode($lang['artist']) ?>,
+          "url": <?= json_encode($lang['stream_url']) ?>,
           "cover_art_url": "assets/img/album-art/art.png",
           "genre": "Gospel",
       	  "live": true
@@ -133,11 +120,9 @@ header("Pragma: no-cache");
   <script>
     window.addEventListener('load',
     function getAPI(){
-    // code to execute
-    fetch('https://stat1.dclm.org/api/nowplaying/8')
+    fetch('https://stat1.dclm.org/api/nowplaying/<?= (int)$lang['api_id'] ?>')
         .then((res) => { return res.json() })
         .then((data) => {
-          //console.log(data.listeners.current);
           document.getElementById('artist').innerHTML = data.now_playing.song.artist;
           document.getElementById('title').innerHTML = data.now_playing.song.title;
           document.getElementById('listeners').innerHTML = data.listeners.current;
