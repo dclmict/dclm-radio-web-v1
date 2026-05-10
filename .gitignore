@@ -21,3 +21,4 @@ ops/k8s/external-secret.yml
 
 # folders
 _
+ops/php/
